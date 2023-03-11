@@ -15,6 +15,7 @@ import authRouter from './routes/auth.route.js';
 import appointmentsRouter from './routes/appointments.route.js';
 import customersRouter from './routes/customers.route.js';
 import reservationsRouter from './routes/reservations.route.js';
+import roomsRouter from './routes/rooms.route.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +27,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,14 +40,14 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// routr middleware
+// router middleware
 app.use('/', indexRouter);
 // api v1
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/appointments', appointmentsRouter);
 app.use('/api/v1/customers', customersRouter);
 app.use('/api/v1/reservations', reservationsRouter);
+app.use('/api/v1/rooms', roomsRouter);
 app.use('/api/v1/users', usersRouter);
 
 // catch 404 and forward to error handler

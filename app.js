@@ -8,9 +8,13 @@ import sassMiddleware from 'node-sass-middleware';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-// ruouts
+// ruoutes
 import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
+import usersRouter from './routes/users.route.js';
+import authRouter from './routes/auth.route.js';
+import appointmentsRouter from './routes/appointments.route.js';
+import customersRouter from './routes/customers.route.js';
+import reservationsRouter from './routes/reservations.route.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,7 +41,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // routr middleware
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// api v1
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/appointments', appointmentsRouter);
+app.use('/api/v1/customers', customersRouter);
+app.use('/api/v1/reservations', reservationsRouter);
+app.use('/api/v1/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

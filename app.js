@@ -1,14 +1,22 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var sassMiddleware = require('node-sass-middleware');
+import express from 'express';
+import createError from 'http-errors';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import sassMiddleware from 'node-sass-middleware';
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-var app = express();
+// ruouts
+import indexRouter from './routes/index.js';
+import usersRouter from './routes/users.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// app
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +34,8 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// routr middleware
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -45,4 +55,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

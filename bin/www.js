@@ -4,28 +4,59 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('vms-backend:server');
-var http = require('http');
+import app from './../app.js';
+import debugLib from 'debug';
+import http from 'http';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose'; 
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// config dotenv
+dotenv.config({
+  path:__dirname+'/./../.env'
+});
+
+const debug = debugLib('vms-backend:server');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
+const server = http.createServer(app);
 
-var server = http.createServer(app);
+// db connection
+const connect = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+// connect to db and listen
+connect().then(() => {
+  server.listen(port);
+});
+
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -88,3 +119,18 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+
+/**
+ * Event listener for db connection
+ */
+
+// listen on db connection event
+mongoose.connection.on('connected', () => {
+  console.log('mogodb atlas connected');
+});
+
+// listen on db disconnection event 
+mongoose.connection.on('disconnected', () => {
+  console.log('mogodb atlas disconnected');
+});

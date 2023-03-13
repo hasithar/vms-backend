@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import UserModel from "../models/User.model.js";
+import { createError } from "../utils/error.util.js";
 
 // REGISTER
 export const registerUser = async (req, res, next) => {
@@ -23,6 +24,27 @@ export const registerUser = async (req, res, next) => {
 
     const savedRoom = await room.save();
     res.status(200).json(savedRoom);
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+// login
+export const loginUser = async (req, res, next) => {
+  try {
+    // check if user exists
+    const user = await UserModel.findOne({username: req.body.username});
+    if(!user) return next(createError(404, "User does not exists"));
+
+    // check if password correct
+    const isPasswordCorrect = await bcrypt.compareSync(req.body.password, user.password);
+    if(!isPasswordCorrect) return next(createError(404, "Invalid credentials"));
+
+    const {isAdmin, password, ...rest} = user._doc;
+
+    res.json({...rest});
+
   } catch (error) {
     next(error);
   }

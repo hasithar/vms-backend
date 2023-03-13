@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import UserModel from "../models/User.model.js";
 import { createError } from "../utils/error.util.js";
 
@@ -41,9 +42,18 @@ export const loginUser = async (req, res, next) => {
     const isPasswordCorrect = await bcrypt.compareSync(req.body.password, user.password);
     if(!isPasswordCorrect) return next(createError(404, "Invalid credentials"));
 
+    // set jwt token
+    const token = jwt.sign({username: user._id, isAdmin: user.isAdmin}, process.env.JWT_SECRET);
+
     const {isAdmin, password, ...rest} = user._doc;
 
-    res.json({...rest});
+    // set accessToken as cookie
+    res
+      .cookie("vms_authtoken", token, {
+        httpOnly: true
+      })
+      .status(200)
+      .json({...rest});
 
   } catch (error) {
     next(error);

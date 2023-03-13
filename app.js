@@ -55,6 +55,19 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+// catch other errors
+app.use((err, req, res, next) => {
+  const errorStatus = err.status || 500;
+  const errorMesage = err.message || 'Error completing the request';
+
+  return res.status(errorStatus).json({
+    success: false,
+    status: errorStatus,
+    message: errorMesage,
+    stack: err.stack
+  })
+});
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

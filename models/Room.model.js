@@ -32,13 +32,7 @@ const RoomSchema = new mongoose.Schema({
   },
   photos: {
     type: [String]
-  },
-  createdAt: {
-    type: String,
-  },
-  updatedAt: {
-    type: String,
   }
-});
+}, {timestamps: true});
 
 export default mongoose.model("Room", RoomSchema);

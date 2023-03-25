@@ -32,6 +32,14 @@ const RoomSchema = new mongoose.Schema({
   },
   photos: {
     type: [String]
+  },
+  roomNumber: {
+    type: Number,
+    required: true,
+    unique: true
+  },
+  blockedDates: {
+    type: [Date]
   }
 }, {timestamps: true});
 

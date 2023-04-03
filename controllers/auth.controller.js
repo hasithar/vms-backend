@@ -13,7 +13,7 @@ export const registerUser = async (req, res, next) => {
     const user = new UserModel({
       username: req.body.username,
       password: hash,
-      email: req.body.email
+      email: req.body.email,
     });
 
     await user.save();
@@ -21,41 +21,61 @@ export const registerUser = async (req, res, next) => {
       success: true,
       status: 200,
       message: "User has been created successfully",
-    })
+    });
 
     const savedRoom = await room.save();
     res.status(200).json(savedRoom);
   } catch (error) {
     next(error);
   }
-}
-
+};
 
 // login
 export const loginUser = async (req, res, next) => {
   try {
     // check if user exists
-    const user = await UserModel.findOne({username: req.body.username});
-    if(!user) return next(createError(404, "User does not exists"));
+    const user = await UserModel.findOne({ username: req.body.username });
+    if (!user)
+      return next(
+        createError(
+          404,
+          "User does not exists",
+          "Please check your username",
+          "error"
+        )
+      );
 
     // check if password correct
-    const isPasswordCorrect = await bcrypt.compareSync(req.body.password, user.password);
-    if(!isPasswordCorrect) return next(createError(404, "Invalid credentials"));
+    const isPasswordCorrect = await bcrypt.compareSync(
+      req.body.password,
+      user.password
+    );
+    if (!isPasswordCorrect)
+      return next(
+        createError(
+          404,
+          "Invalid credentials",
+          "Please check your username and password",
+          "error"
+        )
+      );
 
     // set jwt token
-    const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET
+    );
 
-    const {isAdmin, password, ...rest} = user._doc;
+    const { username } = user._doc;
 
     // set accessToken as cookie
     res
       .cookie("vms_authtoken", token, {
-        httpOnly: true
+        httpOnly: true,
       })
       .status(200)
-      .json({...rest});
-
+      .json({ token, username });
   } catch (error) {
     next(error);
   }
-}
+};

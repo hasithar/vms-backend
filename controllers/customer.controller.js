@@ -6,14 +6,21 @@ import { createResponse } from "../utils/response.util.js";
 export const createCustomer = async (req, res, next) => {
   try {
     const customer = new CustomerModel(req.body);
+    const savedCustomer = await customer.save();
+    const data = savedCustomer.toJSON();
+    const { _id, __v, createdAt, updatedAt, ...rest } = data;
 
-    await customer.save();
-
-    res.status(200).json({
-      success: true,
-      status: 200,
-      message: "Customer has been created successfully",
-    });
+    res
+      .status(200)
+      .json(
+        createResponse(
+          200,
+          "Success!",
+          `Customer has been registered successfully`,
+          "success",
+          rest
+        )
+      );
 
     // const savedCustomer = await customer.save();
     // res.status(200).json(savedCustomer);

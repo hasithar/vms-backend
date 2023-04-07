@@ -37,7 +37,21 @@ export const updateCustomer = async (req, res, next) => {
       { $set: req.body },
       { new: true }
     );
-    res.status(200).json(updatedCustomer);
+    const data = updatedCustomer.toJSON();
+    const { _id, __v, createdAt, updatedAt, ...rest } = data;
+
+    res
+      .status(200)
+      .json(
+        createResponse(
+          200,
+          "Success!",
+          `Customer data has been updated successfully`,
+          "success",
+          [rest]
+        )
+      );
+    // res.status(200).json(updatedCustomer);
   } catch (error) {
     next(error);
   }

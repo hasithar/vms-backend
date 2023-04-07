@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "seed": "node ./seeders"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

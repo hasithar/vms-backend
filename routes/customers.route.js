@@ -1,5 +1,12 @@
 import express from "express";
-import { createCustomer, deleteCustomer, getAllCustomers, getCustomer, updateCustomer } from "../controllers/customer.controller.js";
+import {
+  createCustomer,
+  deleteCustomer,
+  getAllCustomers,
+  getCustomer,
+  updateCustomer,
+} from "../controllers/customer.controller.js";
+import { authCheck } from "../utils/authCheck.util.js";
 
 const router = express.Router();
 
@@ -16,7 +23,6 @@ router.delete("/:id", deleteCustomer);
 router.get("/:id", getCustomer);
 
 // GET ALL
-router.get("/", getAllCustomers);
-
+router.get("/", authCheck, getAllCustomers);
 
 export default router;

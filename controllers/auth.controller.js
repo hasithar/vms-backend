@@ -23,8 +23,7 @@ export const registerUser = async (req, res, next) => {
       message: "User has been created successfully",
     });
 
-    const savedRoom = await room.save();
-    res.status(200).json(savedRoom);
+    // res.status(200).json(savedUser);
   } catch (error) {
     next(error);
   }

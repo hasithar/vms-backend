@@ -33,7 +33,10 @@ export const registerUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
   try {
     // check if user exists
-    const user = await UserModel.findOne({ username: req.body.username });
+    const user = await UserModel.findOne({
+      username: req.body.username,
+      isLoginEnabled: true,
+    });
     if (!user)
       return next(
         createError(

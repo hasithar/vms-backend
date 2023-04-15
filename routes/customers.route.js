@@ -11,16 +11,16 @@ import { authCheck } from "../utils/authCheck.util.js";
 const router = express.Router();
 
 // CREATE
-router.post("/", createCustomer);
+router.post("/", authCheck, createCustomer);
 
 // UPDATE
-router.put("/:id", updateCustomer);
+router.put("/:id", authCheck, updateCustomer);
 
 // DELETE
-router.delete("/:id", deleteCustomer);
+router.delete("/:id", authCheck, deleteCustomer);
 
 // GET SINGLE
-router.get("/:id", getCustomer);
+router.get("/:id", authCheck, getCustomer);
 
 // GET ALL
 router.get("/", authCheck, getAllCustomers);

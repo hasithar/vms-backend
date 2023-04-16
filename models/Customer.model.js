@@ -29,10 +29,30 @@ const CustomerSchema = new mongoose.Schema(
       type: String,
     },
     referredBy: {
-      type: String,
+      type: {
+        id: {
+          type: String,
+        },
+        name: {
+          type: String,
+        },
+        refertype: {
+          type: String,
+        },
+      },
     },
     assignedTo: {
-      type: String,
+      type: {
+        id: {
+          type: String,
+        },
+        name: {
+          type: String,
+        },
+        role: {
+          type: String,
+        },
+      },
     },
     status: {
       type: String,

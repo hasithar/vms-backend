@@ -1,16 +1,33 @@
 import AppointmentModel from "../models/Appointment.model.js";
+import { createError } from "../utils/error.util.js";
+import { createResponse } from "../utils/response.util.js";
 
 // CREATE
 export const createAppointment = async (req, res, next) => {
-  const appointment = new AppointmentModel(req.body);
-
   try {
+    const appointment = new AppointmentModel(req.body);
     const savedAppointment = await appointment.save();
-    res.status(200).json(savedAppointment);
+    const data = savedAppointment.toJSON();
+    const { _id, __v, createdAt, updatedAt, ...rest } = data;
+
+    res
+      .status(200)
+      .json(
+        createResponse(
+          200,
+          "Success!",
+          `Appointment has been created successfully`,
+          "success",
+          rest
+        )
+      );
+
+    // const savedAppointment = await appointment.save();
+    // res.status(200).json(savedAppointment);
   } catch (error) {
     next(error);
   }
-}
+};
 
 // UPDATE
 export const updateAppointment = async (req, res, next) => {
@@ -24,7 +41,7 @@ export const updateAppointment = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 // DELETE
 export const deleteAppointment = async (req, res, next) => {
@@ -34,7 +51,7 @@ export const deleteAppointment = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 // GET SINGLE
 export const getAppointment = async (req, res, next) => {
@@ -44,7 +61,7 @@ export const getAppointment = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 // GET ALL
 export const getAllAppointments = async (req, res, next) => {
@@ -54,4 +71,4 @@ export const getAllAppointments = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
